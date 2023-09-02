@@ -1,0 +1,179 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Quan Ly san Pham";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <ol class="breadcrumb ">
+        <li><a class="" asp-area="admin" asp-controller="homeadmin" asp-action="index"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a class=" active ">Danh sach San Pham</a></li>
+    </ol>
+
+    <!-- Main content -->
+    <section class="content">
+        <form action="/admin/category/index" method="get">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="d-flex row">
+                            <div class="col-md-3"><a href="/admin/product/addproduct" type="button" class="btn btn-success"> Thêm Mới <span class="glyphicon glyphicon-plus"></span></a></div>
+                            <div class="col-md-6 " style="margin-right:0px">
+                                <input type="text" class="form-control" value="" placeholder="Search" id="txtsearch">
+                            </div>
+                            <select name="category_id" id="category_id">
+                                <option value="0" id="txtsearch">Tat ca</option>
+                                @{
+                                    foreach (var item in Model)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                            <button class="btn btn-primary " id="btnsearch" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered date-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px">STT</th>
+                                        <th>Tên danh mục</th>
+                                        <th>Tac Gia</th>
+                                        <th>Slug</th>
+                                        <th>Hinh anh</th>
+                                        <th>The Loai</th>
+                                        <th>Gia Tien</th>
+                                        <th>So Luong</th>
+                                        <th>Mô tả</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @* <tr>
+                                    <td>1</td>
+                                    <td>Rau củ</td>
+                                    <td>Rau-cu</td>
+                                    <td>Mô tả rau củ </td>
+                                    <td>22-04-2019</td>
+                                    <td>JJ</td>
+                                    <td></td>
+                                    </tr>*@
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix text-center">
+                            <ul id="pagination" class="pagination pagination-sm" style="text-align: center; font-size:24px;"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+    <!-- /.content -->
+</div>
+@section Scripts{
+    <script>
+        var tuKhoa="";
+        $(document).ready(function(){
+            GetList(tuKhoa);
+        });
+        $('#btnsearch').click(function (e) {
+            e.preventDefault();
+            tuKhoa = $('#txtsearch').val();
+            GetList(tuKhoa);
+        });
+        let Lstproduct = [];
+        var currentPageNumber = 1;
+        var pageSize = 6;
+        var totalItems = 0;
+        function GetList(search, pageNumber = 1) {
+            $.ajax({
+                type: "GET",
+                url: "/admin/product/getlist",
+                data: {
+                    tuKhoa: search,
+                    pageNumber: pageNumber,
+                    pageSize: pageSize
+                },
+                dataType: "json",
+                beforeSend: function () {
+                    console.log('befor send ..!');
+                },
+                success: function (data) {
+                    if (data.db && data.db.length > 0) {
+                        Lstproduct = data.db;
+                        $('.date-table tbody').html('');
+                        for (let i = 0; i < Lstproduct.length; i++) {
+                            let product = Lstproduct[i];
+                            let create = product.createdDate;
+                            let html = `<tr>
+                                                          <td>${i+1}</td>
+                                                          <td>${product.name}</td>
+                                                          <td>${product.author}</td>
+                                                          <td>${product.slug}</td>
+                                                          <td><img src="/imageproduct/${product.image}" style="height:100px"/></td>
+                                                          <td>${product.categoryName}</td>
+                                                          <td>${product.price}</td>
+                                                          <td>${product.quantity}</td>
+                                                          <td>${product.desciption}</td>
+                                                                  <td>${create}</td>
+                                                   <td>
+                                                                <a href="/admin/product/editproduct?id=${product.id}"type="button" class="btn btn-warning"><span class="glyphicon glyphicon-wrench"></span></a>
+
+                                                                                    <button onclick="DeleteProduct(${product.id})"  type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                                                   </td>
+                                                    </tr>`;
+                            $('.date-table tbody').append(html);
+                        }
+                        totalItems = data.dl;
+                        renderPagination(totalItems, pageNumber);
+
+                    }
+                },
+
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+        function DeleteProduct(id) {
+            let check = confirm("Bạn có chắc muốn xóa Sản Phẩm này ");
+            if (check) {
+                $.ajax({
+                    url: '/admin/product/deleteproduct/' + id,
+                    type: 'POST',
+                    success: function (result) {
+                        if(result.success==true){
+                            GetList(tuKhoa);
+                        }
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                })
+            }
+        }
+        function renderPagination(totalItems, currentPage) {
+            var totalPages = Math.ceil(totalItems / pageSize);
+            var paginationHtml = '';
+            for (var i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHtml += `<li class="active"><a>${i}</a></li>`;
+                } else {
+                    paginationHtml += `<li><a href="#" onclick="changePage(${i})">${i}</a></li>`;
+                }
+            }
+
+            $("#pagination").html(paginationHtml);
+        }
+        function changePage(pageNumber) {
+            currentPageNumber = pageNumber;
+            GetList(tuKhoa, currentPageNumber);
+        }
+    </script>
+}

@@ -1,0 +1,60 @@
+﻿@model DOAN.Models.Accounts
+@{
+    ViewData["Title"] = "EdiAccounts";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <ol class="breadcrumb ">
+            <li><a class="" asp-area="admin" asp-controller="homeadmin" asp-action="index"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a class=" " asp-area="admin" asp-controller="Accounts" asp-action="index">Danh Sach Tai Khoan</a></li>
+            <li><a class=" active ">Phan Quyen Tai Khoan</a></li>
+        </ol>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <form id="Accountsform" enctype="multipart/form-data">
+                        <input type="hidden" class="form-control" id="Id" name="Id" value="@Model.AccountId" />
+                        <div class="md-3">
+                            <label for=""> Loại sản phẩm</label>
+                            <select name="Category_id" id=" Category_id" class="form-select align-content-xl-between">
+                                <option value="0">-------Lựa chọn--------</option>
+                                @{
+                                    foreach (var item in ViewBag.role)
+                                    {
+                                        if (item.RoleId == Model.RoleId)
+                                        {
+                                            <option value="@item.RoleId" selected>  @item.RoleName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.RoleId">@item.RoleName</option>
+                                        }
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                        <div class="md-3">
+
+                            <div class="form-group">
+                                <label for="name">Tên Nguoi Dung</label>
+                                <input type="text" class="form-control" name="Name" id="Name" placeholder="" value="@Model.FullName">
+                            </div>
+                            <div class="form-group">
+                                <label for="slug">Email</label>
+                                <input type="email" class="form-control" name="Slug" id=" Slug" value="@Model.Email" placeholder="">
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

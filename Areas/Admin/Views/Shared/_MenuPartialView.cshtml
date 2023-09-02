@@ -1,0 +1,39 @@
+﻿
+<ul class="sidebar-menu" data-widget="tree">
+    <li class="header">MAIN NAVIGATION</li>
+    <li>
+        <a asp-area="admin" asp-controller="Homeadmin"asp-action="index">
+            <i class="fa fa-dashboard"></i> <span>Thong Ke</span>
+            </a>
+    </li>
+    <li>
+        <a asp-area="admin" asp-controller="category" asp-action="index">
+            <i class="fa fa-files-o"></i>
+            <span>Quan ly danh muc</span>
+        </a>
+    </li>
+    <li>
+        <a asp-area="admin" asp-controller="product" asp-action="index">
+            <i class="fa fa-th"></i> <span>Quan Ly San Pham</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-pie-chart"></i>
+            <span>Quan Ly He Thong</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a asp-area="admin" asp-controller="role" asp-action="index">Quan Ly Quyen Truy Cap</a></li>
+            <li><a asp-area="admin" asp-controller="accounts" asp-action="index">Quan Ly Tai Khoan</a></li>
+        </ul>
+    </li>
+    <li >
+        <a asp-area="admin" asp-controller="order" asp-action="index">
+            <i class="fa fa-laptop"></i>
+            <span>Don Hang</span>
+        </a>
+    </li>
+</ul>

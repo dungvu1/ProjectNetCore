@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-primary">
+                    <ol class="breadcrumb ">
+                        <li><a class="" asp-area="admin" asp-controller="homeadmin" asp-action="index"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li><a class=" " asp-area="admin" asp-controller="Category" asp-action="index">Danh Sach Danh Muc</a></li>
+                        <li><a class=" active ">Them Moi Danh Muc</a></li>
+                    </ol>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <div class="row">
+                        <div class="col-md-8">
+                            <form id="categoryForm" enctype="multipart/form-data">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label for="name">Tên danh mục</label>
+                                        <input type="text" class="form-control" name="name"  id="name" placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="slug">Slug</label>
+                                        <input type="text" class="form-control" name="slug" id=" slug" placeholder="" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Mô tả</label>
+                                        <textarea name="description"  id ="description"rows="3" class="form-control"></textarea>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="image">Chọn file</label>
+                                        <input type="file" name="image" id=" image">
+                                    </div>
+                                </div>
+                                
+                                <!-- /.box-body -->
+
+                                <div class="box-footer">
+                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                </div>
+                                </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+@section Scripts
+    {
+   <script>
+    $(document).ready(function () {
+            $('input[name="name"]').on('input', function () {
+                var name = $(this).val();
+                var slug = slugify(name);
+                $('input[name = "slug"]').val(slug);
+            });
+        $('#categoryForm').submit(function (event) {
+            event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+            var formData = new FormData($(this)[0]);
+
+            $.ajax({
+                url: '/admin/Category/AddCategory',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                        if (result.success == true) {
+                            Swal.fire({
+                                icon: 'success',
+                                text: "Vui lòng chờ hệ thống xử lí",
+                            }).then((result) => {
+                                // Khi Swal.fire đã hoàn thành, reload trang
+                                if (result.isConfirmed) {
+                                    window.location.href = '/admin/category';
+                                }
+                            });
+                    }
+                        else if (result.error == true) {
+                            alert('Them danh muc that bai ');
+                    }
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi trong quá trình gửi yêu cầu');
+                }
+            });
+        });
+           
+    });
+       
+        function slugify(text) {
+            return text.toLowerCase()
+                .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a')        
+                .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e')  
+                .replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i')   
+                .replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o')
+                .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u')
+                .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y')
+                .replace(/đ/gi, 'd')
+                .replace(/\`|\~|\!|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '')
+                .replace(/ /gi, " - ")
+                .replace(/\-\-/gi, '-')
+                .replace(/-+$/, '');         
+        }
+
+</script>
+
+
+}

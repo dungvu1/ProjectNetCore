@@ -1,0 +1,167 @@
+﻿@{ 
+    ViewData["Title"] = "Quan Ly Danh Muc";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <ol class="breadcrumb ">
+        <li><a class="" asp-area="admin" asp-controller="homeadmin" asp-action="index"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a class=" active ">Danh sach Danh Muc</a></li>
+    </ol>
+
+    <!-- Main content -->
+    <section class="content">
+        <form action="/admin/category/index" method="get">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="d-flex row">
+                            <div class="col-md-3"><a href="/admin/category/add" type="button" class="btn btn-success"> Them moi <span class="glyphicon glyphicon-plus"></span></a></div>
+                            <div class="col-md-6 " style="margin-right:0px">
+                                <input type="text" class="form-control" value="" placeholder="Search" id="txtsearch">
+                             </div>
+                            <button  class="btn btn-primary " id="btnsearch" type="submit" ><i class="fa fa-search"></i></button>
+
+                        </div>
+
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered date-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px">STT</th>
+                                        <th>Tên danh mục</th>
+                                        <th>Slug</th>
+                                        <th>Hinh anh</th>
+                                        <th>Mô tả</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @* <tr>
+                                    <td>1</td>
+                                    <td>Rau củ</td>
+                                    <td>Rau-cu</td>
+                                    <td>Mô tả rau củ </td>
+                                    <td>22-04-2019</td>
+                                    <td>JJ</td>
+                                    <td></td>
+                                    </tr>*@
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix text-center">
+                            <ul id="pagination" class="pagination pagination-sm" style="text-align: center; font-size:24px;"></ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+    <!-- /.content -->
+</div>
+@section Scripts
+    {
+    <script>
+        var tuKhoa ="";
+        // render lai trang hien thi
+        $(document).ready(function () {
+            GetList(tuKhoa);
+
+        });
+        $('#btnsearch').click(function(e){
+            e.preventDefault();
+             tuKhoa = $('#txtsearch').val();
+            GetList(tuKhoa);
+        });
+
+        let Lstcate = [];
+        var currentPageNumber = 1;
+        var pageSize = 5;
+        var totalItems = 0;
+        function GetList(search, pageNumber = 1) {
+ 
+            $.ajax({
+                type: "GET",
+                url: "/admin/category/getlist",
+                data:{
+                    tuKhoa:search,
+                    pageNumber: pageNumber,
+                    pageSize: pageSize
+                },
+                dataType: "json",
+                beforeSend: function () {
+                    console.log('befor send ..!');
+                },
+                success: function (data) {
+                         
+                        if (data.db && data.db.length > 0) {
+                            Lstcate = data.db;
+                            $('.date-table tbody').html('');
+                            for (let i = 0; i < Lstcate.length; i++) {
+                                let cate = Lstcate[i];
+                                let html = `<tr>
+                                                  <td>${i + 1}</td>
+                                                  <td>${cate.name}</td>
+                                                  <td>${cate.slug}</td>
+                                                  <td><img src="/imagecategory/${cate.image}" style="height:100px"/></td>
+                                                  <td>${cate.description}</td>
+                                                  <td>${cate.createdDate}</td>
+                                                   <td>
+                                                        <a href="/admin/category/edit?id=${cate.id}"type="button" class="btn btn-warning"><span class="glyphicon glyphicon-wrench"></span></a>
+
+                                                        <button onclick="DeleteCategory(${cate.id})"  type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                                                   </td>
+                                                    </tr>`;
+                                $('.date-table tbody').append(html);
+                            }
+
+
+                        totalItems = data.totalItems;
+                        renderPagination(totalItems, pageNumber);
+                        }
+                },
+
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+        function DeleteCategory(id) {
+            let check = confirm("Bạn có chắc muốn xóa danh mục này");
+            if (check) {
+                $.ajax({
+                    url: '/admin/category/deletecategory/' + id,
+                    type: 'POST',
+                    success: function (result) {
+                        GetList(tuKhoa);
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                })
+            }
+        }
+        function renderPagination(totalItems, currentPage) {
+            var totalPages = Math.ceil(totalItems / pageSize);
+            var paginationHtml = '';
+            for (var i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHtml += `<li class="active"><a>${i}</a></li>`;
+                } else {
+                    paginationHtml += `<li><a href="#" onclick="changePage(${i})">${i}</a></li>`;
+                }
+            }
+
+            $("#pagination").html(paginationHtml);
+        }
+        function changePage(pageNumber) {
+            currentPageNumber = pageNumber;
+            GetList(tuKhoa, currentPageNumber);
+        }
+    </script>
+
+}

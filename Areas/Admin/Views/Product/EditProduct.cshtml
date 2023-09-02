@@ -1,0 +1,139 @@
+﻿@model DOAN.Models.ViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var price = (double)Model.Product.Price;
+}
+<div class="content-wrapper">
+    <section class="content">
+        <ol class="breadcrumb ">
+            <li><a class="" asp-area="admin" asp-controller="homeadmin" asp-action="index"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a class=" " asp-area="admin" asp-controller="Product" asp-action="index">Danh Sach San Pham</a></li>
+            <li><a class=" active ">Chinh Sua San Pham</a></li>
+        </ol>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <form id="Productform" enctype="multipart/form-data">
+                         <input type="hidden" class="form-control" id="Id" name="Id" value="@Model.Product.Id"/>
+                        <div class="md-3">
+                            <label for=""> Loại sản phẩm</label>
+                            <select name="Category_id" id=" Category_id"  class="form-select align-content-xl-between">
+                                <option value="0">-------Lựa chọn--------</option>
+                                @{
+                                    foreach (var item in Model.Categories)
+                                    {
+                                        if (item.Id == Model.Product.Category_id)
+                                        {
+                                                <option value="@item.Id" selected>  @item.Name</option>
+                                        }else
+                                        {
+                                                <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                        <div class="md-3">
+                            
+                            <div class="form-group">
+                                <label for="name">Tên San Pham</label>
+                                <input type="text" class="form-control" name="Name" id="Name" placeholder="" value="@Model.Product.Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="slug">Slug</label>
+                                <input type="text" class="form-control" name="Slug" id=" Slug" value="@Model.Product.Slug" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="author">Tac Gia</label>
+                                <input type="text" class="form-control" name="Author" id=" Author" value="@Model.Product.Author" placeholder="">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="description">Mô tả</label>
+                                <textarea name="Description" id="Description" rows="3"  class="form-control"></textarea>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="Price">Gia Tien</label>
+                                <input type="number" class="form-control" value="@price" name="Price" id=" Price" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="Quantity">So Luong</label>
+                                <input type="number" class="form-control" name="Quantity" value="@Model.Product.Quantity" id=" Quantity" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Chọn file</label>
+                                <input type="file" name="image" id=" image">
+                            </div>
+                        </div>
+
+
+                        <!-- /.box-body -->
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('input[name="Name"]').on('input', function () {
+                var Name = $(this).val();
+                var Slug = slugify(Name);
+                $('input[name = "Slug"]').val(Slug);
+            });
+            $('#Productform').submit(function (e) {
+                e.preventDefault();
+                var formData = new FormData($(this)[0]);
+                $.ajax({
+                    url: '/admin/product/edit',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        if (result.success == true) {
+                            Swal.fire({
+                                icon: 'success',
+                                text: "Update San Pham Thanh Cong",
+                            }).then((result) => {
+                                // Khi Swal.fire đã hoàn thành, reload trang
+                                if (result.isConfirmed) {
+                                    window.location.href = '/admin/product';
+                                }
+                            });
+                        } 
+                        else if(result.error == true){
+                            alert('Update that bai ');
+                        }
+                    },
+                    error: function (result) {
+                            alert('Đã xảy ra lỗi ');
+                        }
+                        
+                });
+            });
+        });
+        function slugify(text) {
+            return text.toLowerCase()
+                .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a')
+                .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e')
+                .replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i')
+                .replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o')
+                .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u')
+                .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y')
+                .replace(/đ/gi, 'd')
+                .replace(/\`|\~|\!|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '')
+                .replace(/ /gi, " - ")
+                .replace(/\-\-/gi, '-')
+                .replace(/-+$/, '');
+        }
+    </script>
+
+}

@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = " Quyen truy cap";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+        <ol class="breadcrumb ">
+            <li><a class="" asp-area="admin" asp-controller="homeadmin" asp-action="index"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a class=" active ">Danh sach Quyen Truy Cap</a></li>
+        </ol>
+    <!-- Main content -->
+    <section class="content">
+
+        <form action="" method="get">
+            <div class="row">
+                <div class="col-md-12">        
+                        <div class="box">
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered date-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px">STT</th>
+                                        <th>RoleName</th>
+                                        <th>Mô tả</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @* <tr>
+                                    <td>1</td>
+                                    <td>Rau củ</td>
+                                    <td>Rau-cu</td>
+                                    <td>Mô tả rau củ </td>
+                                    <td>22-04-2019</td>
+                                    <td>JJ</td>
+                                    <td></td>
+                                    </tr>*@
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix">
+                            <ul id="pagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+    <!-- /.content -->
+</div>
+@section Scripts
+    {
+    <script>
+        // render lai trang hien thi
+        $(document).ready(function () {
+            GetList();
+
+        });
+        let Lstcate = [];
+        function GetList() {
+            $.ajax({
+                type: "GET",
+                url: "/admin/role/getlist",
+                dataType: "json",
+                beforeSend: function () {
+                    console.log('befor send ..!');
+                },
+                success: function (data) {
+                    if (data.db && data.db.length > 0) {
+                        console.log(data.db);
+                        Lstcate = data.db;
+                        $('.date-table tbody').html('');
+                        for (let i = 0; i < Lstcate.length; i++) {
+                            let cate = Lstcate[i];
+                            let html = `<tr>
+                                                  <td>${i + 1}</td>
+                                                  <td>${cate.roleName}</td>
+                                                  <td>${cate.description}</td>d>
+                                                   <td>
+                                                           <a href="/admin/role/add" type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+                                                        <a href="/admin/role/edit?id=${cate.roleId}"type="button" class="btn btn-warning"><span class="glyphicon glyphicon-wrench"></span></a>
+
+                                                        <button onclick="DeleteRole(${cate.roleId})"  type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+                                                   </td>
+                                                    </tr>`;
+                            $('.date-table tbody').append(html);
+                        }
+
+                    }
+                },
+
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+        function DeleteRole(id) {
+            let check = confirm("bạn có chắc muốn xóa danh mục này");
+            if (check) {
+                $.ajax({
+                    url: '/admin/role/deleterole/' + id,
+                    type: 'post',
+                    success: function (result) {
+
+                        GetList();
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                })
+            }
+        }
+    </script>
+
+}

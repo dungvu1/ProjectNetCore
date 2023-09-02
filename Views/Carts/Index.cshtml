@@ -1,0 +1,183 @@
+﻿@model List<DOAN.Models.Cartitem>
+<section class="breadcrumb-section set-bg" data-setbg="/img/breadcrumb.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>Shopping Cart</h2>
+                        <div class="breadcrumb__option">
+                            <a href="./index.html">Home</a>
+                            <span>Shopping Cart</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Products</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                           <form>
+                                @{
+                                    if (Model != null)
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td class="shoping__cart__item">
+                                                    <img src="~/imageproduct/@item.Product.Image" style="height:226px;width:153px;" alt="">
+                                                    <h5>@item.Product.Name</h5>
+                                                </td>
+                                                <td class="shoping__cart__price">
+                                                        @{
+                                                        var price = (double)item.Product.Price;
+                                                        }
+                                                        @price $
+                                                </td>
+                                                <td class="shoping__cart__quantity">
+                                                    <div class="quantity">
+                                                        <div class="pro-qty">
+                                                            <input type="number" id="cartitem" data-mahh="@item.Product.Id" data-dongia="@item.Product.Price" value="@item.amount">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="shoping__cart__total">
+                                                        @{
+                                                        var total = (double)item.TotalMoney;
+                                                        }
+                                                        @total
+                                                </td>
+                                                <td class="shoping__cart__item__close">
+                                                    <a href="#" id="remove" data-mahh="@item.Product.Id"><span class="icon_close"></span>
+
+                                                </a>
+                                                </td>
+                                                </tr>
+                                        }
+                                    }
+                                }
+                           </form>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+                  <div class="row">
+                    <div class="col-lg-12">
+                        <div class="shoping__cart__btns">
+                            <a asp-area="" asp-controller="Product" asp-action="index" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        @*<div class="shoping__continue">
+                <div class="shoping__discount">
+                <h5>Discount Codes</h5>
+                <form action="#">
+                <input type="text" placeholder="Enter your coupon code">
+                <button type="submit" class="site-btn">APPLY COUPON</button>
+                </form>
+                </div>
+                </div>*@
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="shoping__checkout">
+                            <h5>Cart Total</h5>
+                            <ul>
+                                <li>Thanh Tien <span>@{
+                                            var totalall = (double)@Model.Sum(x => x.TotalMoney);
+                                        }@totalall $</span></li>
+                            </ul>  
+                    @{if(Model.Count > 0)
+                         {
+                            <a asp-area="" asp-controller="checkout" asp-action="index" class="primary-btn">PROCEED TO CHECKOUT</a>
+                        }
+                        else
+                        {
+                            <a href="#" onclick="check()" class="primary-btn">PROCEED TO CHECKOUT</a>
+                        }
+                    }
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </section>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#cartitem").OnClick(function (e) {
+                e.preventDefault();
+                var id = $(this).attr("data-mahh"); // Sử dụng id của sản phẩm thay vì "id"
+                var soluong = parseInt($(this).val()); // Sử dụng id của input số lượng
+                $.ajax({
+                    url: '/Carts/UpdateCart', // Chữ 'Carts' viết hoa chữ cái đầu
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        id: id, // Sử dụng tên tham số "productId"
+                        amount: soluong // Sử dụng tên tham số "quantity"
+                    },
+                    success: function (res) {
+                        if(res.success){
+                            alert("Item update successfully");
+                            location.reload();                      
+                        }
+
+                    },
+                    error: function (error) {
+                        alert("Error adding to cart");
+                    }
+                });
+            });
+            $("#remove").click(function (event) {
+                event.preventDefault();
+                var id = $(this).attr("data-mahh"); // Sử dụng id của sản phẩm thay vì "id"
+                $.ajax({
+                    url: '/Carts/Remove', // Chữ 'Carts' viết hoa chữ cái đầu
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        id: id, 
+                    },
+                    success: function (res) {
+                        //updateCartItemCount(res.cartItemCount); // Update cart item count
+                        if (res.success) {
+                            alert("Item delete successfully");
+                            location.reload();
+                        }
+
+                    },
+                    error: function (error) {
+                        alert("Error adding to cart");
+                    }
+                });
+            });
+        });
+        function check(){
+            Swal.fire({
+                title: 'Gio Hang Rong',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            });
+        }
+    </script>
+}

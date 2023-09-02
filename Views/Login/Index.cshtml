@@ -1,0 +1,35 @@
+﻿
+<link rel="stylesheet" href="~/css/login.css" type="text/css">
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />
+        </div>
+
+        <!-- Login Form -->
+        <form method="post" action="/Login/Logini">
+            <input type="text" id="Email" class="fadeIn second" name="Email" value="" placeholder="login">
+            <input type="text" id="Password" class="fadeIn third" name="Password" value="" placeholder="password">
+            <p style="color:red;">@TempData["error"]</p>
+            <p style="color:red;">@TempData["err"]</p>
+            <input  name="Url" value="@ViewBag.ReturnUrl" hidden />
+            <button type="submit" class="btn btn-success">Log In</button>
+        </form>
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                
+                <div class="row">
+                     <div class="col-md-6">
+                        <a class="underlineHover" href="#">Forgot Password?</a>
+                     </div>
+                    <div class="col-md-6">
+                        <a class="underlineHover" asp-controller="login" asp-action="register">Sign up New Account</a>
+                    </div>
+                </div>
+
+            </div>
+            <!-- <p>Don't have an account!</p>  -->
+    </div>
+</div>

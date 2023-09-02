@@ -1,0 +1,311 @@
+﻿ @model  IEnumerable<dynamic>
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fa fa-bars"></i>
+                        <span>All departments</span>
+                    </div>
+                    @await Component.InvokeAsync("Menu")
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="hero__search">
+                    <div class="hero__search__form">
+                        <form action="#">
+                            <div class="hero__search__categories">
+                                All Categories
+                                <span class="arrow_carrot-down"></span>
+                            </div>
+                            <input type="text" placeholder="What do yo u need?">
+                            <button type="submit" class="site-btn">SEARCH</button>
+                        </form>
+                    </div>
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>+65 11.188.888</h5>
+                            <span>support 24/7 time</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero__item set-bg" data-setbg="/img/hero/banner.jpg">
+                    <div class="hero__text">
+                        <span>FRUIT FRESH</span>
+                        <h2>Vegetable <br />100% Organic</h2>
+                        <p>Free Pickup and Delivery Available</p>
+                        <a href="#" class="primary-btn">SHOP NOW</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+<!-- Categories Section Begin -->
+<section class="categories">
+    <div class="container">
+        <div class="row">
+            <div class="categories__slider owl-carousel">
+                
+                    @foreach (var item in Model)
+                    {
+                    <div class="col-lg-3" style="align-content:center;">
+                        <div class="categories__item set-bg" >
+                            <img style="width:160px;height:200px; display: block;margin-left: auto;margin-right: auto;" src="/imageproduct/@item.Image">
+                            <h5><a style="font-size:16px" href="/product/detail?id=@item.Id">@item.Name</a></h5>
+                        </div>
+                    </div>
+                    }
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Categories Section End -->
+<!-- Featured Section Begin -->
+<section class="featured spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>Featured Product</h2>
+                </div>
+                <div class="featured__controls">
+                    <ul>
+                        <li class="active" data-filter="*">All</li>
+                        <li data-filter=".oranges">Oranges</li>
+                        <li data-filter=".fresh-meat">Fresh Meat</li>
+                        <li data-filter=".vegetables">Vegetables</li>
+                        <li data-filter=".fastfood">Fastfood</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row featured__filter" id="product">
+            @*code product khi dung ajax truyen vo day*@
+        </div>
+        <div class="row justify-content-center">
+        <div class="col-lg-12 " >
+            <div class=" box-footer clearfix product__pagination blog__pagination text-center justify-content-center" >
+                <ul id="pagination" class="pagination pagination-sm featured__item__text justify-content-center" style="align-content:center;font-size:18px;"></ul>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+<!-- Featured Section End -->
+<!-- Banner Begin -->
+<div class="banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="banner__pic">
+                    <img src="img/banner/banner-1.jpg" alt="">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="banner__pic">
+                    <img src="img/banner/banner-2.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Banner End -->
+<!-- Blog Section Begin -->
+<section class="from-blog spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title from-blog__title">
+                    <h2>From The Blog</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="blog__item">
+                    <div class="blog__item__pic">
+                        <img src="~/img/blog/blog-1.jpg" alt="">
+                    </div>
+                    <div class="blog__item__text">
+                        <ul>
+                            <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
+                            <li><i class="fa fa-comment-o"></i> 5</li>
+                        </ul>
+                        <h5><a href="#">Cooking tips make cooking simple</a></h5>
+                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="blog__item">
+                    <div class="blog__item__pic">
+                        <img src="~/img/blog/blog-2.jpg" alt="">
+                    </div>
+                    <div class="blog__item__text">
+                        <ul>
+                            <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
+                            <li><i class="fa fa-comment-o"></i> 5</li>
+                        </ul>
+                        <h5><a href="#">6 ways to prepare breakfast for 30</a></h5>
+                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="blog__item">
+                    <div class="blog__item__pic">
+                        <img src="~/img/blog/blog-3.jpg" alt="">
+                    </div>
+                    <div class="blog__item__text">
+                        <ul>
+                            <li><i class="fa fa-calendar-o" ></i> May 4,2019</li>
+                            <li><i class="fa fa-comment-o"></i> 5</li>
+                        </ul>
+                        <h5><a href="#">Visit the clean farm in the US</a></h5>
+                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Blog Section End -->
+@section Scripts{
+    <script>
+        var tuKhoa = "";
+        $(document).ready(function () {
+            GetList(tuKhoa);
+        });
+        $('#btnsearch').click(function (e) {
+            e.preventDefault();
+            tuKhoa = $('#txtsearch').val();
+            GetList(tuKhoa);
+        });
+        let Lstproduct = [];
+        var currentPageNumber = 1;
+        var pageSize = 8;
+        var totalItems = 0;
+        function GetList(search, pageNumber = 1) {
+            $.ajax({
+                type: "GET",
+                url: "/home/getlist",
+                data: {
+                    tuKhoa: search,
+                    pageNumber: pageNumber,
+                    pageSize: pageSize
+                },
+                dataType: "json",
+                beforeSend: function () {
+                    console.log('befor send ..!');
+                },
+                success: function (data) {
+                    if (data.db && data.db.length > 0) {
+                        Lstproduct = data.db;
+                        $('#product').html('');
+                        for (let i = 0; i < Lstproduct.length; i++) {
+                            let product = Lstproduct[i];
+                            let html = `
+                            <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat" >
+                                <div class="featured__item" >
+                                         <div class="featured__item__pic set-bg" style="align-items:center;background-color:white">
+                                        <p hidden="hidden">${i + 1}</p>
+                                                <img style="width:160px;height:262px; display: block;margin-left: auto;margin-right: auto;"  src="/imageproduct/${product.image}">
+                                        <ul class="featured__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                                    <li><a href="javascript:void(0)" class="add-to-cart"
+                                                        data-image="/imageproduct/${product.image}" data-id="${product.id}"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                            <div class="featured__item__text">
+                                        <h6><a  href="/product/detail?id=${product.id}"type="button">${product.name}</a></h6>
+                                        <h6>$${product.price}</h6><span  hidden="hidden">${product.categoryName}<span>
+                                    </div>
+                                </div>
+                            </div>`;
+                            $('#product').append(html);
+                        }
+                        
+                        $(".add-to-cart").click(
+                            function (event) {
+                              
+                                event.preventDefault();
+                                var pImages = $(this).attr("data-image");
+                                var $cartIcon = $(".my-cart-icon");
+                                var $image = $('<img  src="' + pImages + '"/>').css({ "position": "fixed", "z-index": "99999" });
+                                $(this).parent().parent().prepend($image);
+                                var position = $cartIcon.position();
+                                var id = $(this).attr("data-id");
+                                var soluong = 1;
+                                $.ajax({
+                                    url: '/Carts/AddToCart',
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: {
+                                        id: id,
+                                        amount: soluong
+                                    },
+                                    success: function (res) {
+                                        if (res.success == true) {
+                                            $image.animate({
+                                                top: position.top + 10,
+                                                left: $(window).width() - 40,
+                                                width: "-20px",
+                                                height: "-20px"
+                                            }, 1200, "linear", function () {
+                                                $image.remove();
+
+                                            });
+
+                                            setTimeout(iconcart, 1000);
+                                        }
+
+                                    },
+                                    error: function (error) {
+                                        alert("Error adding to cart");
+                                    }
+                                });
+                        });
+                        totalItems = data.dl;
+                        renderPagination(totalItems, pageNumber);
+                       
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+        function renderPagination(totalItems, currentPage) {
+            var totalPages = Math.ceil(totalItems / pageSize);
+            var paginationHtml = ``;
+            for (var i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHtml += `<li style="witdh:30px;justify-content-center" class="active"><a href="#">${i}</a></li>`;
+                } else {
+                    paginationHtml += `<li style="witdh:30px;"><a href="#" onclick="changePage(${i})">${i}</a></li>`;
+                }
+            }
+
+            $("#pagination").html(paginationHtml);
+        }
+        function changePage(pageNumber) {
+            currentPageNumber = pageNumber;
+            GetList(tuKhoa, currentPageNumber);
+        }
+        function iconcart() {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Your add has been saved',
+                showConfirmButton: false,
+                timer: 1100
+            });
+        }
+    </script>
+}
